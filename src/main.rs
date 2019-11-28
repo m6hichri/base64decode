@@ -3,6 +3,8 @@ use std::str;
 const UPPERCASE_OFFSET: i8 = -65;
 const LOWERCASE_OFFSET: i8 = 26 - 97;
 const NUM_OFFSET: i8 = 52 - 48;
+const SOIXANTE_DEUX: i8 = 62;
+const SOIXANTE_TROI: i8 = 63;
 
 fn base64decode(input: String) -> String {
     let result = input.trim().chars()
@@ -13,8 +15,9 @@ fn base64decode(input: String) -> String {
                 '0' ..= '9' => ascii + NUM_OFFSET,
                 'a' ..= 'z' => ascii + LOWERCASE_OFFSET,
                 'A' ..= 'Z' => ascii + UPPERCASE_OFFSET,
-                '+' => 62,
-                '/' => 63
+                '+' => SOIXANTE_DEUX,
+                '/' => SOIXANTE_TROI,
+                _=> ascii
             };
             format!("{:#08b}", convert)[2..].to_string()        //convert indices to binary format and remove the two first digits
         })
@@ -27,16 +30,19 @@ fn base64decode(input: String) -> String {
             usize::from_str_radix(&num_str, 2).unwrap() as u8   //convert the binary string into its u8 value
         })
         .collect::<Vec<_>>();
- 
     let result = str::from_utf8(&result).unwrap();              //convert into UTF-8 string
     return String::from(result);
+   // return result;
 }
  
 fn main() {
-    let input = String::new();
+    let mut input = String::new();
+    println!("enter");
     std::io::stdin().read_line(&mut input).unwrap();
+    
     println!("Input: {}", input);
  
     let output = base64decode(input);
     println!("Output: {}", output);
 }
+
